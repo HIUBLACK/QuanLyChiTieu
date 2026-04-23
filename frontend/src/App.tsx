@@ -9,8 +9,8 @@ type ActiveMenu = 'dashboard' | 'chat';
 export default function App() {
   const [activeMenu, setActiveMenu] = useState<ActiveMenu>('dashboard');
 
-  const isConfigured = 
-    import.meta.env.VITE_SUPABASE_URL && 
+  const isConfigured =
+    import.meta.env.VITE_SUPABASE_URL &&
     import.meta.env.VITE_SUPABASE_ANON_KEY;
 
   return (
@@ -80,7 +80,7 @@ export default function App() {
       </div>
 
       <footer className="h-8 bg-white border-t border-[var(--color-border)] flex items-center justify-center text-[11px] text-[#ADB5BD] uppercase tracking-[1px] shrink-0">
-        Hệ thống quản lý doanh nghiệp &copy; 2026 | Phiên bản 1.0.0
+        Hệ thống quản lý doanh nghiệ &copy; 2026 | Phiên bản 1.0.0
       </footer>
     </div>
   );
