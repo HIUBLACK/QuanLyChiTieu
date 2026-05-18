@@ -2,13 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [master, develop]
+    branches: [main, dev, 'feature/**']
   pull_request:
-    branches: [master, develop]
+    branches: [main, dev, 'feature/**']
 
 jobs:
   backend:
-    name: Backend — Lint & Test
+    name: Backend — Lint, Test & Build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -32,6 +32,12 @@ jobs:
 
       - name: Test
         run: npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/expense_manager
+          JWT_SECRET: ci-secret
 
   frontend:
     name: Frontend — Lint, Type Check, Test & Build
@@ -64,6 +70,3 @@ jobs:
 
       - name: Build
         run: npm run build
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}

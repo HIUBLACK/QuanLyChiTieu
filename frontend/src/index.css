@@ -1,41 +1,44 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #5E72E4;
-  --color-success: #2DCE89;
-  --color-warning: #FB6340;
-  --color-text-main: #32325D;
-  --color-text-muted: #8898AA;
-  --color-border: #E1E8ED;
-  --color-bg-main: #F4F7F9;
-  
-  --font-sans: 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: "Plus Jakarta Sans", "Segoe UI", sans-serif;
 }
 
 @layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-[var(--color-bg-main)] text-[var(--color-text-main)] font-sans;
+    @apply m-0 min-h-screen bg-slate-50 text-slate-900 font-sans antialiased;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
   }
 }
 
 @layer components {
-  .geo-card {
-    @apply bg-white border border-[var(--color-border)] p-6 rounded-none flex flex-col;
+  .field-input {
+    @apply w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-4 focus:ring-teal-100;
   }
-  
-  .geo-card-title {
-    @apply text-[12px] uppercase tracking-[1px] text-[var(--color-text-muted)] mb-4 font-bold;
+
+  .primary-button {
+    @apply inline-flex items-center justify-center rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/15 transition hover:-translate-y-0.5 hover:bg-slate-800;
   }
-  
-  .geo-btn-primary {
-    @apply bg-[var(--color-brand)] text-white px-5 py-2.5 text-[13px] font-semibold border-none rounded-none cursor-pointer transition-opacity hover:opacity-90 disabled:opacity-50;
+
+  .secondary-button {
+    @apply inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50;
   }
-  
-  .geo-nav-item {
-    @apply px-4 py-2.5 text-sm text-[#525F7F] border-l-3 border-transparent cursor-pointer transition-all;
-  }
-  
-  .geo-nav-item-active {
-    @apply bg-[#F6F9FC] text-[var(--color-brand)] border-l-[var(--color-brand)] font-semibold;
+
+  .danger-button {
+    @apply inline-flex items-center justify-center rounded-2xl bg-rose-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-rose-700;
   }
 }
