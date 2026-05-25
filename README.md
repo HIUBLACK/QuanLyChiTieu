@@ -69,7 +69,7 @@ docker compose up -d --build
 
 Sau khi chạy:
 
-- Frontend: `http://localhost:8080`
+- Frontend: `http://localhost:5173`
 - Backend: `http://localhost:3001/api/health`
 - PostgreSQL: `localhost:5432`
 

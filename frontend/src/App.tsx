@@ -9,7 +9,6 @@ import {
   LogOut,
   Plus,
   ReceiptText,
-  ShieldCheck,
   Tag,
   WalletCards,
 } from 'lucide-react';
