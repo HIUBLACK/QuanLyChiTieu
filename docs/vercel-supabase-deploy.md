@@ -57,7 +57,7 @@ Repo này đã có:
 
 - [frontend/vercel.json](<d:/Nam4_HK2/Chuyen de cn moi/Code/QuanLyChiTieu/frontend/vercel.json>)
 
-### Tạo project frontend
+### Tạo project fronten
 
 1. Import cùng repo vào Vercel lần thứ 2
 2. Chọn **Root Directory** là `frontend`
