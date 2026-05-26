@@ -19,6 +19,7 @@ export const env = {
   DATABASE_URL: process.env.DATABASE_URL || '',
   JWT_SECRET: process.env.JWT_SECRET || 'dev-secret-change-me',
   JWT_EXPIRES_IN_DAYS: toNumber(process.env.JWT_EXPIRES_IN_DAYS, 7),
+  VERCEL_URL: process.env.VERCEL_URL || '',
 };
 
 export function validateEnv() {
