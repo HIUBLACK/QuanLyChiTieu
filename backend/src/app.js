@@ -17,6 +17,13 @@ app.use(
 );
 app.use(express.json());
 
+app.get('/', (_req, res) => {
+  res.json({
+    message: 'Expense Manager API',
+    health: '/api/health',
+  });
+});
+
 app.get('/api/health', (_req, res) => {
   res.json({
     ok: true,

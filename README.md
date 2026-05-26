@@ -69,7 +69,7 @@ docker compose up -d --build
 
 Sau khi chạy:
 
-- Frontend: `http://localhost:8080`
+- Frontend: `http://localhost:5173`
 - Backend: `http://localhost:3001/api/health`
 - PostgreSQL: `localhost:5432`
 
@@ -124,5 +124,6 @@ cd frontend && npm test && npm run build
 
 ## Deploy và incident report
 
+- Hướng dẫn deploy Vercel + Supabase: [docs/vercel-supabase-deploy.md](docs/vercel-supabase-deploy.md)
 - Hướng dẫn demo/deploy: [docs/deploy-demo.md](docs/deploy-demo.md)
 - Báo cáo 3 incident bắt buộc: [docs/incidents.md](docs/incidents.md)

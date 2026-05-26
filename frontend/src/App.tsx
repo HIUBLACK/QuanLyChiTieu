@@ -9,7 +9,6 @@ import {
   LogOut,
   Plus,
   ReceiptText,
-  ShieldCheck,
   Tag,
   WalletCards,
 } from 'lucide-react';
@@ -170,14 +169,14 @@ export default function App() {
       const nextSession =
         authMode === 'login'
           ? await api.login({
-              email: String(formData.get('email') || ''),
-              password: String(formData.get('password') || ''),
-            })
+            email: String(formData.get('email') || ''),
+            password: String(formData.get('password') || ''),
+          })
           : await api.register({
-              fullName: String(formData.get('fullName') || ''),
-              email: String(formData.get('email') || ''),
-              password: String(formData.get('password') || ''),
-            });
+            fullName: String(formData.get('fullName') || ''),
+            email: String(formData.get('email') || ''),
+            password: String(formData.get('password') || ''),
+          });
 
       setSession(nextSession);
       setNotice(authMode === 'login' ? 'Đăng nhập thành công.' : 'Tạo tài khoản thành công.');
@@ -301,34 +300,7 @@ export default function App() {
     return (
       <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(13,148,136,0.16),_transparent_28%),linear-gradient(180deg,#f4fbfa_0%,#f6f8fc_55%,#ffffff_100%)] px-4 py-10 text-slate-900">
         <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-          <motion.section
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="rounded-[32px] border border-white/60 bg-white/75 p-8 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur"
-          >
-            <div className="inline-flex items-center gap-2 rounded-full border border-teal-200 bg-teal-50 px-4 py-2 text-sm font-medium text-teal-700">
-              <ShieldCheck className="h-4 w-4" />
-              Kiến trúc 3 lớp, Docker-ready, CI-ready
-            </div>
-            <h1 className="mt-6 max-w-xl font-['Space_Grotesk',sans-serif] text-5xl font-bold leading-tight tracking-[-0.04em]">
-              ExpenseFlow giúp bạn kiểm soát thu chi theo cách trực quan hơn.
-            </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-              Quản lý danh mục, ghi nhận giao dịch, xem số dư hiện tại và biểu đồ thống kê theo tháng trên một giao diện hiện đại, gọn và dễ demo.
-            </p>
-            <div className="mt-10 grid gap-4 md:grid-cols-3">
-              {[
-                ['Tổng quan thời gian thực', 'Dashboard hiển thị tổng thu, tổng chi, số dư và xu hướng 6 tháng gần nhất.'],
-                ['Quy trình rõ ràng', 'Đăng ký, đăng nhập, CRUD danh mục và giao dịch theo đúng yêu cầu bài.'],
-                ['Sẵn sàng deploy', 'Tách frontend, backend, database và cấu hình môi trường để triển khai production.'],
-              ].map(([title, description]) => (
-                <div key={title} className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                  <p className="text-sm font-semibold text-slate-900">{title}</p>
-                  <p className="mt-3 text-sm leading-6 text-slate-500">{description}</p>
-                </div>
-              ))}
-            </div>
-          </motion.section>
+
 
           <motion.section
             initial={{ opacity: 0, y: 16 }}
@@ -338,7 +310,7 @@ export default function App() {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Authentication</p>
+
                 <h2 className="mt-2 text-3xl font-semibold text-slate-900">
                   {authMode === 'login' ? 'Đăng nhập' : 'Đăng ký'}
                 </h2>
@@ -394,12 +366,12 @@ export default function App() {
       <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 lg:flex-row lg:px-6">
         <aside className="w-full rounded-[28px] border border-white/80 bg-white/80 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)] lg:w-80">
           <div className="rounded-[24px] bg-[linear-gradient(135deg,#0f766e,_#0ea5a4)] p-6 text-white">
-            <p className="text-sm uppercase tracking-[0.28em] text-teal-100">ExpenseFlow</p>
+            <p className="text-sm uppercase tracking-[0.28em] text-teal-100">Quản lý chi tiêu cá nhân</p>
             <h1 className="mt-4 font-['Space_Grotesk',sans-serif] text-3xl font-bold tracking-[-0.04em]">
               Xin chào, {session.user.full_name}
             </h1>
             <p className="mt-3 text-sm leading-6 text-teal-50">
-              Theo dõi tài chính cá nhân bằng dashboard trực quan và luồng CRUD rõ ràng cho buổi demo.
+              Theo dõi tài chính cá nhân trực quan.
             </p>
           </div>
 
@@ -440,7 +412,7 @@ export default function App() {
         <main className="flex-1 space-y-6">
           <header className="flex flex-col gap-4 rounded-[28px] border border-white/80 bg-white/80 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-sm uppercase tracking-[0.28em] text-slate-400">Finance Control Center</p>
+              <p className="text-sm uppercase tracking-[0.28em] text-slate-400">Quản lý chi tiêu cá nhân</p>
               <h2 className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-slate-900">
                 {view === 'dashboard' ? 'Bảng điều khiển' : view === 'transactions' ? 'Quản lý giao dịch' : 'Quản lý danh mục'}
               </h2>
