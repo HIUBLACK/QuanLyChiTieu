@@ -1,10 +1,10 @@
 {
-  "name": "task-attachments-backend",
+  "name": "expense-flow-backend",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": "20.x"
   },
   "scripts": {
     "dev": "node --watch server.js",

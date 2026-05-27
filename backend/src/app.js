@@ -8,10 +8,24 @@ import { transactionRouter } from './routes/transactionRoutes.js';
 import { dashboardRouter } from './routes/dashboardRoutes.js';
 
 const app = express();
+const allowedOrigins = [
+  env.FRONTEND_URL,
+  ...env.FRONTEND_URLS.split(',').map((origin) => origin.trim()).filter(Boolean),
+].filter(Boolean);
 
 app.use(
   cors({
-    origin: env.FRONTEND_URL,
+    origin(origin, callback) {
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`Origin ${origin} is not allowed by CORS`));
+    },
     credentials: false,
   }),
 );
