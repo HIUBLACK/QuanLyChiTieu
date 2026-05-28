@@ -467,43 +467,106 @@ flowchart LR
 
 ### Incident 1
 
-- **Hiện tượng:** Frontend gọi backend bị chặn bởi CORS
-- **Log:** Browser báo `blocked by CORS policy`
+- **Hiện tượng:** Sau khi deploy production, người dùng bấm đăng ký thì request bị chặn, frontend không thể gọi backend.
+- **Log:** Browser Console hiển thị:
+  ```text
+  Access to fetch at 'https://expense-flow-backend.vercel.app/api/auth/register'
+  from origin 'https://quan-ly-chi-tieu-vbcv.vercel.app'
+  has been blocked by CORS policy:
+  The 'Access-Control-Allow-Origin' header has a value
+  'https://expense-flow-three.vercel.app'
+  that is not equal to the supplied origin.
+  ```
 - **Layer:** `L3 Backend / Config`
-- **Nguyên nhân:** `FRONTEND_URL` trên backend Vercel sai domain frontend thực tế
-- **Cách fix:** cập nhật `FRONTEND_URL` đúng production domain rồi redeploy backend
-- **Cách phòng tránh:** cấu hình sẵn `FRONTEND_URLS` cho production và preview
-- **Hình minh họa:** chèn ảnh lỗi CORS trong Console + ảnh env backend
+- **Nguyên nhân:** Backend Vercel đang dùng `FRONTEND_URL` cũ, không khớp domain frontend production thực tế.
+- **Cách fix:**
+  - vào Vercel backend project
+  - sửa `FRONTEND_URL=https://quan-ly-chi-tieu-vbcv.vercel.app`
+  - redeploy backend
+- **Cách phòng tránh:**
+  - tách origin ra ENV
+  - thêm `FRONTEND_URLS` để hỗ trợ nhiều domain frontend
+  - kiểm tra lại CORS sau mỗi lần đổi domain production
+- **Hình minh họa:** ảnh Console báo CORS + ảnh env backend trên Vercel
 
 ### Incident 2
 
-- **Hiện tượng:** Browser báo `Redirect is not allowed for a preflight request`
-- **Log:** request đi tới URL có dạng `//api/auth/login`
-- **Layer:** `L4 Frontend`
-- **Nguyên nhân:** `VITE_API_BASE_URL` có slash cuối nên khi nối với path tạo ra URL sai
-- **Cách fix:** sửa `VITE_API_BASE_URL` không có slash cuối, đồng thời chuẩn hóa trong `frontend/src/lib/api.ts`
-- **Cách phòng tránh:** normalize base URL trong code và kiểm tra env trước deploy
-- **Hình minh họa:** chèn ảnh Network tab với request URL sai
+- **Hiện tượng:** Domain backend mở được nhưng `/api/health` trả `500`, Vercel hiển thị function crash.
+- **Log:** Vercel Runtime Logs hiển thị:
+  ```text
+  Error: getaddrinfo ENOTFOUND db.plfkdasoelnzkhzrztus.supabase.co
+      at async initDatabase (file:///var/task/backend/src/db/init.js:38:3)
+      at async ensureReady (file:///var/task/backend/api/index.js:13:3)
+  ```
+- **Layer:** `L2 Database / Config`
+- **Nguyên nhân:** `DATABASE_URL` trên backend Vercel sai format:
+  - dùng host không đúng cho môi trường serverless
+  - password chứa ký tự `@` nhưng không URL-encode
+  - chuỗi kết nối được gõ tay thay vì copy từ Supabase
+- **Cách fix:**
+  - vào Supabase Dashboard
+  - lấy đúng **Transaction pooler connection string**
+  - cập nhật `DATABASE_URL` trong backend Vercel
+  - redeploy backend
+- **Cách phòng tránh:**
+  - luôn copy nguyên connection string từ Supabase
+  - không tự viết tay DB URL
+  - tránh dùng password có ký tự đặc biệt nếu không chắc về URL encoding
+- **Hình minh họa:** ảnh Vercel Function Logs + ảnh `/api/health` lỗi 500
 
 ### Incident 3
 
-- **Hiện tượng:** Backend Vercel crash, `500 FUNCTION_INVOCATION_FAILED`
-- **Log:** `getaddrinfo ENOTFOUND ...supabase.co`
-- **Layer:** `L2 Database / Config`
-- **Nguyên nhân:** `DATABASE_URL` sai format, dùng sai host hoặc password chứa ký tự đặc biệt chưa encode
-- **Cách fix:** dùng đúng Supabase transaction pooler connection string
-- **Cách phòng tránh:** luôn copy nguyên connection string từ Supabase Dashboard, không tự gõ tay
-- **Hình minh họa:** chèn ảnh Vercel Function Logs
+- **Hiện tượng:** Người dùng bấm xóa danh mục nhưng hệ thống không cho xóa dù thao tác đã gửi thành công từ frontend.
+- **Log:** Backend trả response:
+  ```text
+  { "error": "Cannot delete category that is already used by transactions" }
+  ```
+- **Layer:** `L3 Backend / Business logic`
+- **Nguyên nhân:** Danh mục đã được dùng bởi ít nhất một giao dịch trong bảng `transactions`, nên backend chặn xóa để tránh mất tính toàn vẹn dữ liệu.
+- **Cách fix:**
+  - giữ rule chặn xóa ở backend
+  - yêu cầu người dùng xóa giao dịch liên quan hoặc chuyển giao dịch sang danh mục khác trước
+  - hiển thị thông báo lỗi rõ ràng ở frontend
+- **Cách phòng tránh:**
+  - kiểm tra số lượng giao dịch đang dùng danh mục trước khi hiển thị nút xóa
+  - thêm hộp thoại hướng dẫn người dùng xử lý giao dịch liên quan
+- **Hình minh họa:** ảnh thao tác xóa danh mục + response lỗi từ backend
 
 ### Incident 4
 
-- **Hiện tượng:** GitHub Actions frontend fail ở bước `typecheck`
-- **Log:** TypeScript báo không tìm thấy `apiFetch`
-- **Layer:** `L4 Frontend / Source code`
-- **Nguyên nhân:** repo còn sót code mẫu cũ của app task/Supabase
-- **Cách fix:** xóa các component, hook, test cũ không còn dùng
-- **Cách phòng tránh:** dọn code mẫu cũ khi đổi domain bài toán
-- **Hình minh họa:** chèn ảnh GitHub Actions fail và commit fix
+- **Hiện tượng:** Người dùng chọn danh mục thuộc nhóm thu nhập nhưng lại tạo giao dịch kiểu chi tiêu, request bị từ chối.
+- **Log:** Backend trả response:
+  ```text
+  { "error": "Transaction type must match category type" }
+  ```
+- **Layer:** `L3 Backend / Validation`
+- **Nguyên nhân:** Backend kiểm tra dữ liệu đầu vào và phát hiện `transaction.type` không khớp với `category.type`.
+- **Cách fix:**
+  - frontend chỉ hiển thị danh mục đúng với loại giao dịch đang chọn
+  - backend tiếp tục giữ validation để chặn dữ liệu sai
+- **Cách phòng tránh:**
+  - đồng bộ form frontend với dữ liệu category
+  - luôn validate lại ở backend
+- **Hình minh họa:** ảnh form giao dịch nhập sai loại + response lỗi
+
+### Incident 5
+
+- **Hiện tượng:** Người dùng đang thao tác bình thường nhưng sau đó dashboard không tải dữ liệu, request API trả `401`.
+- **Log:** Backend trả response:
+  ```text
+  { "error": "Unauthorized" }
+  ```
+- **Layer:** `L4 Frontend` kết hợp `L3 Backend`
+- **Nguyên nhân:** Token đã hết hạn, bị xóa, hoặc token cũ trong localStorage không còn hợp lệ với backend hiện tại.
+- **Cách fix:**
+  - xóa session cũ
+  - đăng nhập lại
+  - frontend gọi `/api/auth/me` để xác minh trạng thái đăng nhập
+- **Cách phòng tránh:**
+  - kiểm tra token ngay khi app khởi động
+  - tự logout khi token lỗi
+  - dùng secret ổn định giữa các lần deploy
+- **Hình minh họa:** ảnh request `401` trong Network tab + ảnh màn hình đăng nhập lại
 
 ---
 
